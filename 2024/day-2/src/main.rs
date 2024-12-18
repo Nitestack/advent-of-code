@@ -9,19 +9,30 @@ fn main() {
     let mut safe_count: u32 = 0;
 
     input.lines().for_each(|line| {
-        let levels = line.split(" ").map(|level| level.parse::<u32>()).collect::<Result<Vec<_>, _>>().expect("Invalid input");
+        let levels = line
+            .split(" ")
+            .map(|level| level.parse::<u32>())
+            .collect::<Result<Vec<_>, _>>()
+            .expect("Invalid input");
 
-        if is_safe(&levels) { safe_count += 1; }
+        if is_safe(&levels) {
+            safe_count += 1;
+        }
     });
     println!("Safe count: {}", safe_count);
 
     // ── Part 2 ──────────────────────────────────────────────────────────
     let mut dampener_safe_count: u32 = 0;
     input.lines().for_each(|line| {
-        let levels = line.split(" ").map(|level| level.parse::<u32>()).collect::<Result<Vec<_>, _>>().expect("Invalid input");
+        let levels = line
+            .split(" ")
+            .map(|level| level.parse::<u32>())
+            .collect::<Result<Vec<_>, _>>()
+            .expect("Invalid input");
 
-        if is_safe(&levels) { dampener_safe_count += 1; }
-        else {
+        if is_safe(&levels) {
+            dampener_safe_count += 1;
+        } else {
             for i in 0..levels.len() {
                 let mut new_levels = levels.clone();
                 new_levels.remove(i);
@@ -42,13 +53,21 @@ fn is_safe(levels: &Vec<u32>) -> bool {
     let mut is_safe = false;
 
     for (i, level) in levels.iter().enumerate() {
-        if i == 0 { continue; }
-        if !(1..=3).contains(&level.abs_diff(levels[i - 1])) { break; }
+        if i == 0 {
+            continue;
+        }
+        if !(1..=3).contains(&level.abs_diff(levels[i - 1])) {
+            break;
+        }
         if *level > levels[i - 1] {
-            if has_downwards_pattern { break; }
+            if has_downwards_pattern {
+                break;
+            }
             has_upwards_pattern = true;
         } else if *level < levels[i - 1] {
-            if has_upwards_pattern { break; }
+            if has_upwards_pattern {
+                break;
+            }
             has_downwards_pattern = true;
         }
         if levels.len() - 1 == i {

@@ -4,7 +4,7 @@
 
 use std::collections::HashSet;
 
-use glam::{ ivec2, IVec2 };
+use glam::{ivec2, IVec2};
 
 const LEFT: IVec2 = ivec2(-1, 0);
 const RIGHT: IVec2 = ivec2(1, 0);
@@ -14,7 +14,7 @@ const DOWN: IVec2 = ivec2(0, 1);
 #[derive(PartialEq, Clone)]
 enum Tile {
     Empty,
-    Obstruction
+    Obstruction,
 }
 
 #[derive(PartialEq, Eq, Hash, Clone, Copy)]
@@ -22,7 +22,7 @@ enum Direction {
     Left,
     Right,
     Up,
-    Down
+    Down,
 }
 impl Direction {
     fn vec(&self) -> IVec2 {
@@ -30,7 +30,7 @@ impl Direction {
             Direction::Left => LEFT,
             Direction::Right => RIGHT,
             Direction::Up => UP,
-            Direction::Down => DOWN
+            Direction::Down => DOWN,
         }
     }
     fn rotate_right(&self) -> Self {
@@ -50,7 +50,11 @@ struct Guard {
 }
 impl Guard {
     fn new(pos: IVec2) -> Self {
-        Guard { pos, initial_pos: pos, direction: Direction::Up }
+        Guard {
+            pos,
+            initial_pos: pos,
+            direction: Direction::Up,
+        }
     }
     fn reset(&mut self) -> &Self {
         self.pos = self.initial_pos;
@@ -67,20 +71,32 @@ fn main() {
     let map = input
         .lines()
         .enumerate()
-        .map(|(y, line)| line.chars().enumerate().map(|(x, tile)| match tile {
-            '^' => {
-                guard = Guard::new(ivec2(x as i32, y as i32));
-                Tile::Empty
-            },
-            '#' => Tile::Obstruction,
-            '.' => Tile::Empty,
-            _ => panic!("Invalid input")
-        }).collect::<Vec<_>>()).collect::<Vec<_>>();
+        .map(|(y, line)| {
+            line.chars()
+                .enumerate()
+                .map(|(x, tile)| match tile {
+                    '^' => {
+                        guard = Guard::new(ivec2(x as i32, y as i32));
+                        Tile::Empty
+                    }
+                    '#' => Tile::Obstruction,
+                    '.' => Tile::Empty,
+                    _ => panic!("Invalid input"),
+                })
+                .collect::<Vec<_>>()
+        })
+        .collect::<Vec<_>>();
     let mut positions = HashSet::from([guard.initial_pos]);
     // ── Part 1 ──────────────────────────────────────────────────────────
     loop {
         let next_pos = guard.pos + guard.direction.vec();
-        if next_pos.x < 0 || next_pos.y < 0 || next_pos.x >= map[0].len() as i32 || next_pos.y >= map.len() as i32 { break; }
+        if next_pos.x < 0
+            || next_pos.y < 0
+            || next_pos.x >= map[0].len() as i32
+            || next_pos.y >= map.len() as i32
+        {
+            break;
+        }
         if map[next_pos.y as usize][next_pos.x as usize] == Tile::Obstruction {
             guard.direction = guard.direction.rotate_right();
             continue;
@@ -103,7 +119,13 @@ fn main() {
                 break;
             }
             let next_pos = guard.pos + guard.direction.vec();
-            if next_pos.x < 0 || next_pos.y < 0 || next_pos.x >= map[0].len() as i32 || next_pos.y >= map.len() as i32 { break; }
+            if next_pos.x < 0
+                || next_pos.y < 0
+                || next_pos.x >= map[0].len() as i32
+                || next_pos.y >= map.len() as i32
+            {
+                break;
+            }
             if new_map[next_pos.y as usize][next_pos.x as usize] == Tile::Obstruction {
                 guard.direction = guard.direction.rotate_right();
                 continue;

@@ -11,8 +11,18 @@ fn main() {
 
     input.lines().for_each(|line| {
         let (left_part, right_part) = line.split_once(" ").expect("An unexpected error occurred");
-        left_numbers.push(left_part.trim().parse::<usize>().expect("An unexpected error occurred while coercing a string to a number"));
-        right_numbers.push(right_part.trim().parse::<usize>().expect("An unexpected error occurred while coercing a string to a number"));
+        left_numbers.push(
+            left_part
+                .trim()
+                .parse::<usize>()
+                .expect("An unexpected error occurred while coercing a string to a number"),
+        );
+        right_numbers.push(
+            right_part
+                .trim()
+                .parse::<usize>()
+                .expect("An unexpected error occurred while coercing a string to a number"),
+        );
     });
 
     left_numbers.sort();
@@ -20,8 +30,12 @@ fn main() {
 
     let mut differences: usize = 0;
 
-    for(&left, &right) in left_numbers.iter().zip(right_numbers.iter()) {
-        differences += if left > right { left - right } else { right - left };
+    for (&left, &right) in left_numbers.iter().zip(right_numbers.iter()) {
+        differences += if left > right {
+            left - right
+        } else {
+            right - left
+        };
     }
 
     println!("Sum of differences: {}", differences);

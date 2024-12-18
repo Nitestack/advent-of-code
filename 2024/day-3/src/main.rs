@@ -14,24 +14,32 @@ fn main() {
 
     // ── Part 2 ──────────────────────────────────────────────────────────
     for (i, unparsed_excluded_part) in input.split("don't()").enumerate() {
-        if i == 0 { continue; }
+        if i == 0 {
+            continue;
+        }
         let excluded_part = unparsed_excluded_part.split_once("do()");
         if excluded_part.is_none() {
             if i != input.split("dont'()").collect::<Vec<_>>().len() {
-              sum -= parse_and_multiply(unparsed_excluded_part);
+                sum -= parse_and_multiply(unparsed_excluded_part);
             }
         } else {
             sum -= parse_and_multiply(excluded_part.expect("Error parsing excluded part").0);
         }
     }
-    println!("Sum of all multiplications excluding the excluded parts: {}", sum);
+    println!(
+        "Sum of all multiplications excluding the excluded parts: {}",
+        sum
+    );
 }
 
 fn parse_and_multiply(input: &str) -> u32 {
     let regex = Regex::new(r"mul\((\d{1,3}),(\d{1,3})\)").expect("Invalid regex");
     let mut multiplications: Vec<(u32, u32)> = vec![];
     for (_, [first_value, second_value]) in regex.captures_iter(input).map(|c| c.extract()) {
-        multiplications.push((first_value.parse::<u32>().expect("Error parsing"), second_value.parse::<u32>().expect("Error parsing")));
+        multiplications.push((
+            first_value.parse::<u32>().expect("Error parsing"),
+            second_value.parse::<u32>().expect("Error parsing"),
+        ));
     }
     multiplications.iter().map(|(a, b)| a * b).sum::<u32>()
 }
